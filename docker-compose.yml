@@ -1,0 +1,75 @@
+version: '3.5'
+services:
+
+  db:
+    image: postgres:13
+    networks: [docker-net]
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./docker/postgre/db:/var/lib/postgresql/data
+      - ./docker/postgre/init:/docker-entrypoint-initdb.d/
+    environment:
+      POSTGRES_PASSWORD: qwerty
+      POSTGRES_USER: postgres
+      POSTGRES_DB: test
+
+    restart: always
+
+  redis:
+    image: redis
+    networks: [docker-net]
+    expose:
+      - "6379"
+
+    restart: always
+
+  backend:
+      build:
+        context: .
+        dockerfile: app/Dockerfile
+      ports:
+        - "8080:8000"
+      volumes:
+        - .:/code
+      environment:
+        POSTGRES_DB: test
+        POSTGRES_HOST: db
+        POSTGRES_PORT: 5432
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: qwerty
+
+        REDIS_HOST: redis
+        REDIS_PORT: 6379
+        REDIS_TTL: 84600
+
+        JWT_KEY: P9;FrLVK,}tY:RHaR[2z2|]/Sfvn:1OZcDvs1p`C7C<h0BhFGM8e2}05mal:I9ZOx{{W6X[6v3Nh2m/;S|xOYSeA9wl9|6.aJ.J{.--atoJT7KREiTWH=WSf?bvL{Dg
+
+        API_V1: /api/v1
+
+      networks: [docker-net]
+      restart: always
+      depends_on:
+        - db
+        - redis
+
+
+#  web:
+#    image: nginx
+#    volumes:
+#      - ./docker/nginx:/etc/nginx/conf.d
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      NGINX_HOST: 0.0.0.0
+#      NGINX_PORT: 8080
+#    networks: [docker-net]
+#    restart: always
+#    depends_on:
+#      - redis
+#      - db
+#      - backend
+
+networks:
+  docker-net:
+    driver: bridge
