@@ -8,23 +8,30 @@ class UserLogin(BaseModel):
 
 
 class UserData(BaseModel):
-    login: str
     name: str
     city: int
-    state: bool = True
-    is_admin: bool = False
 
     class Config:
         orm_mode = True
 
 
-class UserCreate(UserData):
+class UserCreate(BaseModel):
+    login: str
+    name: str
+    city: int
     passwd: str
 
+    class Config:
+        orm_mode = True
 
-class UserInfo(UserData):
+
+class UserInfo(BaseModel):
     id: int
+    name: str
+    city: int
 
+    class Config:
+        orm_mode = True
 
 class UserFullData(UserInfo):
     passwd: str
@@ -35,11 +42,14 @@ class UserUpdate(BaseModel):
     passwd: Union[str, None]
     name: Union[str, None]
     city: Union[int, None]
-    state: Union[bool, None]
-    is_admin: Union[bool, None]
 
     class Config:
         orm_mode = True
 
 
+class UserSetAdmin(BaseModel):
+    id: int
+    is_admin: bool
 
+    class Config:
+        orm_mode = True

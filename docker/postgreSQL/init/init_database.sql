@@ -12,7 +12,8 @@ CREATE TABLE if not exists "Users"(
     city integer ,
     state boolean not null DEFAULT TRUE ,
     is_admin boolean not null DEFAULT FALSE,
-    FOREIGN KEY(city) REFERENCES "City"(id) ON DELETE SET NULL
+    FOREIGN KEY(city) REFERENCES "City"(id) ON DELETE SET NULL,
+    UNIQUE(login)
 );
 
 CREATE TABLE if not exists "Publication"(
@@ -27,7 +28,7 @@ CREATE TABLE if not exists "Publication"(
     FOREIGN KEY(users) REFERENCES "Users"(id) ON DELETE SET NULL
 );
 
-
+CREATE EXTENSION pg_trgm;
 CREATE INDEX if not exists user_email ON "Users"(login);
 CREATE INDEX if not exists user_name ON "Users"(name);
 CREATE INDEX if not exists city_name ON "City"(name);

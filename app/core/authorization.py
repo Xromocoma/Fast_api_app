@@ -59,7 +59,7 @@ class Auth(Redis):
         """
         user_payload = {
             "id": user.id,
-            "email": user.email,
+            "login": user.login,
             "state": user.state,
             "is_admin": user.is_admin
         }

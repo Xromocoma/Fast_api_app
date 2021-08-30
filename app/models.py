@@ -18,8 +18,8 @@ class User(db.base):
     passwd = Column(String)
     name = Column(String)
     city = Column(Integer, ForeignKey(City.id))
-    state = Column(Boolean, default=1)
-    is_admin = Column(Boolean, default=0),
+    state = Column(Boolean, default=True)
+    is_admin = Column(Boolean, default=False)
 
 
 class Publication(db.base):
@@ -31,4 +31,4 @@ class Publication(db.base):
     city = Column(Integer, ForeignKey(City.id))
     body = Column(String)
     price = Column(Float)
-    state = Column(Boolean, default=1)
+    state = Column(Boolean, default=True)
