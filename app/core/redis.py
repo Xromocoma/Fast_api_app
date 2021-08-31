@@ -5,9 +5,6 @@ from app.config import settings
 
 
 class Redis:
-    """
-    Класс для работы с редисом
-    """
 
     def __init__(self):
         self.instance = redis.Redis(host=settings.REDIS_HOST,

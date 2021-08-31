@@ -32,3 +32,14 @@ class PublicationUpdate(BaseModel):
     class Config:
         orm_mode = True
 
+
+class PublicationInfo(BaseModel):
+    id: int
+    users: int
+    name: str
+    city: int
+    body: str
+    price: float
+
+    class Config:
+        orm_mode = True

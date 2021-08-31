@@ -16,7 +16,6 @@ async def is_authentication(request: Request) -> None:
     """
 
     access_token = request.headers.get('Authorization')
-    print(access_token)
     if access_token and access_token:
         access_token = access_token.split()[1]
         if access_token == "null":

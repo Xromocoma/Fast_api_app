@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter
 from app.routers.v1 import city, users, publication, auth
 

@@ -50,12 +50,11 @@ class Auth(Redis):
                 return True
         return False
 
-    def create_jwt_token(self, user: UserFullData) -> None:
+    def create_jwt_token(self, user: UserFullData) -> str:
         """
-        Проверка Jwt токена на совпадение и наличие в базе
-        :param user_id:
-        :param token:
-        :return:
+        Создание Jwt токена
+        :param user:
+        :return: str
         """
         user_payload = {
             "id": user.id,

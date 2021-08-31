@@ -38,7 +38,7 @@ def get_user(user_id: int) -> User:
     return user
 
 
-def update_user(user_id: int, update_params: dict, token: str) -> bool:
+def update_user(user_id: int, update_params: dict, token: str) -> User:
     """
     Обновить юзера по ID, обновляемые поля динамические.
     :param user_id:
@@ -66,15 +66,16 @@ def update_user(user_id: int, update_params: dict, token: str) -> bool:
 
     if update_values.get('passwd'):
         update_values['passwd'] = passwd_to_hash(update_values['passwd'])
+    session = db.session()
     try:
-        session = db.session()
         session.execute(update(User).where(User.id == user_id).values(**update_values))
         session.commit()
         user = get_user(user_id)
         auth.create_jwt_token(user)
-        return True
+        return user
     except sqlalchemy.exc.IntegrityError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e.orig))
+        session.rollback()
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e.orig)) from e
 
 
 def delete_user(user_id: int, token: str) -> bool:
@@ -120,7 +121,7 @@ def create_user(user: UserCreate) -> User:
         return new_user
     except sqlalchemy.exc.IntegrityError as e:
         session.rollback()
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e.orig))
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e.orig)) from e
 
 
 def passwd_to_hash(password: str) -> str:
@@ -132,7 +133,7 @@ def passwd_to_hash(password: str) -> str:
     return hashlib.sha256(password.encode('utf-8')).hexdigest()
 
 
-def change_admin_role_to_user(new_admin: dict, token: str):
+def change_admin_role_to_user(new_admin: dict, token: str) -> bool:
     """
     Изменение прав пользователя
     :param new_admin:

@@ -8,7 +8,7 @@ from app.config import settings
 
 class PostgreDB:
     def __init__(self):
-        sleep(2)  # Несмотря на depent_on в докере, сервис все равно не успевает.
+        sleep(3)  # Время для инициализации базы.
         print(settings.POSTGRES_ENGINE_URI)
         self.engine = create_engine(settings.POSTGRES_ENGINE_URI,
                                     pool_size=6,

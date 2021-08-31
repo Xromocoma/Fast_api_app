@@ -6,6 +6,9 @@ class UserLogin(BaseModel):
     login: str
     passwd: str
 
+    class Config:
+        orm_mode = True
+
 
 class UserData(BaseModel):
     name: str
@@ -33,8 +36,18 @@ class UserInfo(BaseModel):
     class Config:
         orm_mode = True
 
-class UserFullData(UserInfo):
+
+class UserFullData(BaseModel):
+    id: int
+    login: str
     passwd: str
+    name: str
+    city: int
+    is_admin: bool
+    state: bool
+
+    class Config:
+        orm_mode = True
 
 
 class UserUpdate(BaseModel):

@@ -28,10 +28,12 @@ def get_user_by_id(user_id: int):
 
 # Обновление юзера по UID, поля динамические
 @router.put("/users/{user_id}",
+            response_model=UserInfo,
             dependencies=[Depends(is_authentication), Security(security)])
 def user_update(user_id: int, user_data: UserUpdate, credentials: HTTPAuthorizationCredentials = Security(security)):
-    if update_user(user_id, user_data.dict(), credentials.credentials):
-        return Response(status_code=status.HTTP_200_OK)
+    result = update_user(user_id, user_data.dict(), credentials.credentials)
+    if result:
+        return result
     return Response(status_code=status.HTTP_404_NOT_FOUND)
 
 
